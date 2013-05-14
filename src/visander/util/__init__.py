@@ -1,3 +1,5 @@
+import numpy
+
 class ImageSampler(object):
   '''
   A class which splits a large image into multiple smaller
@@ -20,16 +22,20 @@ class ImageSampler(object):
     y_index = self.index / horiz_samples
     if y_index >= vert_samples:
       return None
-    
-    
-  def __new_image(self):
-    self.index = 0
+    x_pos = x_index * self.sample_width
+    y_pos = y_index * self.sample_height
+    self.index += 1
+    return numpy.copy(image[y_pos:y_pos+self.sample_height,x_pos:x_pos+self.sample_width])    
     
   @property
   def images(self):
+    '''
+    Goes through each image in the source and breaks it into sample_width x sample_height
+    subimages and returns each subimage.
+    '''
     for image in self.image_source.images:
+      self.index = 0
       sample = self.__get_next_sample(image)
       while sample is not None:
         yield sample
         sample = self.__get_next_sample(image)
-      self.__new_image()

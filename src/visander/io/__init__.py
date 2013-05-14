@@ -1,5 +1,6 @@
 import os
 import cv2
+from visander.util import ImageSampler
 
 class DirectoryBasedImageSource(object):
   '''
@@ -24,7 +25,9 @@ class DirectoryBasedImageSource(object):
           image = cv2.imread(os.path.join(root,filename))
           yield image 
 
-for image in DirectoryBasedImageSource('/Users/Pace/git/westonpace/visander/resource/images').images:
+image_source = DirectoryBasedImageSource('/Users/Pace/git/westonpace/visander/resource/images')
+for image in ImageSampler(image_source, 20, 20).images:
+  #print image
   cv2.namedWindow('foobar')
   cv2.imshow('foobar',image)
   cv2.waitKey()
