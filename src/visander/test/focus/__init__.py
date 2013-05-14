@@ -12,7 +12,7 @@ class FocusGroundTruth(object):
   def __init__(self, scale):
     self.scale = scale
     
-class CorrelationBasedFocusOperatorEvaluator(object):
+class WholeImageFocusOperatorEvaluator(object):
   '''
   This is an evaluator for focus operators.  It evaluates operators which produce
   a single scale value for a given image as focus information.  It takes in a 
