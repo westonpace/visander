@@ -1,6 +1,9 @@
 import os
 import cv2
 from visander.util import ImageSampler
+from visander.core import Entity
+from visander.color import BgrIntensityComponent, GrayscaleIntensityComponent,\
+  get_intensity, ensure_grayscale
 
 class DirectoryBasedImageSource(object):
   '''
@@ -14,7 +17,7 @@ class DirectoryBasedImageSource(object):
     self.image_extensions = ['.jpg','.png','.bmp','.tif','.tiff']
     
   @property
-  def images(self):
+  def entities(self):
     '''
     A generator function which returns all of the images in this image source.
     '''
@@ -23,11 +26,7 @@ class DirectoryBasedImageSource(object):
         _,extension = os.path.splitext(filename)
         if extension.lower() in self.image_extensions:
           image = cv2.imread(os.path.join(root,filename))
-          yield image 
-
-image_source = DirectoryBasedImageSource('/Users/Pace/git/westonpace/visander/resource/images')
-for image in ImageSampler(image_source, 20, 20).images:
-  #print image
-  cv2.namedWindow('foobar')
-  cv2.imshow('foobar',image)
-  cv2.waitKey()
+          if image.shape[2] == 3:
+            yield Entity(BgrIntensityComponent(image))
+          else:
+            yield Entity(GrayscaleIntensityComponent(image)) 
